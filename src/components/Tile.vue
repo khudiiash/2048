@@ -17,6 +17,12 @@
 <script>
 export default {
   name: "Tile",
+  data() {
+    return {
+      transitionCSS:
+        "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out"
+    }
+  },
   props: {
     num: Number,
     coor: Number,
@@ -25,31 +31,30 @@ export default {
     from: Object,
     to: Object,
     tile: Object,
-    transition: Boolean
+    transition: Boolean,
+    type: String
+  },
+  methods: {
+    move() {
+      this.$refs.thisTile.style.transition = "none";
+      this.$refs.thisTile.style.top = `${this.from.top}px`;
+      this.$refs.thisTile.style.left = `${this.from.left}px`;
+      setTimeout(() => {
+        this.$refs.thisTile.style.transition = this.transitionCSS;
+        this.$refs.thisTile.style.top = `${this.to.top}px`;
+        this.$refs.thisTile.style.left = `${this.to.left}px`;
+      }, 0);
+    }
   },
   mounted() {
-    if (this.transition || this.tile.merged) {
-
-      this.$refs.thisTile.style.top = `${this.from.top}px`;
-      this.$refs.thisTile.style.left = `${this.from.left}px`;
-      setTimeout(() => {
-        this.$refs.thisTile.style.top = `${this.to.top}px`;
-        this.$refs.thisTile.style.left = `${this.to.left}px`;
-      }, 0);
-    } else if (this.from) {
-      console.log(this.num)
-      this.$refs.thisTile.style.top = `${this.from.top}px`;
-      this.$refs.thisTile.style.left = `${this.from.left}px`;
-      setTimeout(() => {
-        this.$refs.thisTile.style.top = `${this.to.top}px`;
-        this.$refs.thisTile.style.left = `${this.to.left}px`;
-      }, 0);
+    if (this.transition || this.from || this.tile.merged) {
+      this.move();
     } else {
-      this.$refs.thisTile.style.transition =
-        "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
-      this.$refs.thisTile.style.opacity = 0;
-      setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
-    }
+        this.$refs.thisTile.style.transition =
+          "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
+        this.$refs.thisTile.style.opacity = 0;
+        setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
+      }
     if (this.tile.spawn) {
       this.$refs.thisTile.style.transition =
         "transform 200ms, opacity 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
@@ -61,7 +66,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .tile {
   position: absolute;
   background: rgb(206, 206, 206);

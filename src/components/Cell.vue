@@ -8,9 +8,10 @@
       :num="occupied.num"
       :coor="occupied.coor"
       :tile="occupied"
+      :type="'new'"
     />
   </div>
-  <div v-else-if="this.old" class="cell">
+  <div v-else-if="this.old && !this.fresh" class="cell">
     <div>
       <Tile
         :cellXY="xy"
@@ -21,6 +22,22 @@
         :coor="old.coor"
         :tile="old"
         :transition="true"
+        :type="'old'"
+      />
+    </div>
+  </div>
+  <div v-else-if="!this.old && this.fresh" class="cell">
+    <div>
+      <Tile
+        :cellXY="xy"
+        :position="position"
+        :from="fresh.from"
+        :to="fresh.to"
+        :num="fresh.num"
+        :coor="fresh.coor"
+        :tile="fresh"
+        :transition="true"
+        :type="'old'"
       />
     </div>
   </div>
@@ -50,16 +67,15 @@ export default {
   watch: {
     occupied: function(tile, old) {
       if (!tile && old) {
-        this.old = old
-        setTimeout(() => this.old = null, 200)
+        this.old = old;
+        setTimeout(() => (this.old = null), 300);
       } else if (tile && old) {
         this.fresh = tile;
-        this.old = old
-        setTimeout(() => this.fresh = null, 200)
+        this.old = old;
+        setTimeout(() => (this.fresh = null), 300);
       }
     }
   }
-  
 };
 </script>
 

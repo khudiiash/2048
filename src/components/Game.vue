@@ -301,7 +301,6 @@ export default {
           }
         }
       }, 50);
-     
     },
     move(dir) {
       this.arrange(dir);
@@ -333,7 +332,7 @@ export default {
                 prev = this.cells[prev.coor];
                 this.cells[cur.coor] = null;
                 this.arrange(dir);
-                return tiles.length % 2 === 0 ? cur : prev;
+                return;
               }
               return cur;
             }
@@ -424,7 +423,8 @@ export default {
   margin-bottom: 0;
   box-sizing: border-box;
   color: #776e65;
-  margin-top: -20%;
+  margin-top: -30%;
+  margin-bottom: 5%;
 }
 .score {
   font-size: 30px;
