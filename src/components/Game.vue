@@ -190,9 +190,9 @@ export default {
         12: null,
         13: null,
         14: null,
-        21: new Tile(4, 21),
-        22: new Tile(4, 22),
-        23: new Tile(4, 23),
+        21: null,
+        22: null,
+        23: null,
         24: null,
         31: null,
         32: null,
@@ -340,7 +340,7 @@ export default {
           });
         }
       });
-      // this.spawn()
+      this.spawn()
     }
   },
   mounted() {
@@ -411,7 +411,7 @@ export default {
           break;
       }
     });
-    // this.spawn();
+    this.spawn();
   }
 };
 </script>
