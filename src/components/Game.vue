@@ -423,6 +423,7 @@ export default {
   margin-bottom: 0;
   box-sizing: border-box;
   color: #776e65;
+  margin-top: -20%;
 }
 .score {
   font-size: 30px;
