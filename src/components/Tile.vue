@@ -25,7 +25,7 @@ export default {
     from: Object,
     to: Object,
     tile: Object,
-    transition: Boolean
+    transition: Boolean,
   },
   mounted() {
     if (this.transition) {
@@ -36,15 +36,26 @@ export default {
         this.$refs.thisTile.style.left = `${this.to.left}px`
       }, 0);
     } else {
-      this.$refs.thisTile.style.opacity = 0;
-      setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
+      if (this.from) {
+        this.$refs.thisTile.style.top = `${this.from.top}px`;
+        this.$refs.thisTile.style.left = `${this.from.left}px`;
+        setTimeout(() => {
+          this.$refs.thisTile.style.top = `${this.to.top}px`
+          this.$refs.thisTile.style.left = `${this.to.left}px`
+        }, 0);
+      } else {
+        this.$refs.thisTile.style.transition =
+        "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
+        this.$refs.thisTile.style.opacity = 0;
+        setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
+      }
+     
     }
     if (this.tile.spawn) {
-      this.$refs.thisTile.style.transition = "200ms"
-      setTimeout(()=> {
-        this.$refs.thisTile.style.transform = "scale(1)";
-      },200)
-      
+      this.$refs.thisTile.style.transition =
+        "transform 200ms, opacity 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
+      this.$refs.thisTile.style.transform = "scale(0)";
+      setTimeout(() => (this.$refs.thisTile.style.transform = `scale(1)`), 200);
     }
   }
 };

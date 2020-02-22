@@ -1,7 +1,8 @@
 <template>
   <div class="game" id="game">
-    <h1>2048</h1>
-    <!-- <h2>{{ score }}</h2> -->
+    <div>
+      <h1 class="title">2048</h1>
+    </div>
     <div class="board">
       <Cell
         pos="11"
@@ -134,15 +135,17 @@ class Tile {
     this.from;
     this.to;
     this.spawn = true;
+    this.merged = false;
   }
-  merged({ from, to }) {
+  merge({ from, to }) {
     this.from = from;
     this.to = to;
     this.num = this.num + this.num;
+    this.merged = true;
     this.spawn = false;
     return this;
   }
-  moved({ cellXY, from, to }) {
+  move({ cellXY, from, to }) {
     this.from = from;
     this.to = to;
     this.coor = cellXY;
@@ -253,7 +256,7 @@ export default {
           if (dir === "down") col = col.sort(reversed);
           col.forEach((tile, r) => {
             if (tile) {
-              this.cells[`${r + 1}${c + 1}`] = tile.moved({
+              this.cells[`${r + 1}${c + 1}`] = tile.move({
                 cellXY: parseInt(`${r + 1}${c + 1}`),
                 from: this.coords[tile.coor],
                 to: this.coords[parseInt(`${r + 1}${c + 1}`)]
@@ -269,7 +272,7 @@ export default {
           if (dir === "right") row = row.sort(reversed);
           row.forEach((tile, c) => {
             if (tile) {
-              this.cells[`${r + 1}${c + 1}`] = tile.moved({
+              this.cells[`${r + 1}${c + 1}`] = tile.move({
                 cellXY: parseInt(`${r + 1}${c + 1}`),
                 from: this.coords[tile.coor],
                 to: this.coords[parseInt(`${r + 1}${c + 1}`)]
@@ -283,19 +286,22 @@ export default {
     },
     spawn() {
       // spawn one random tile
-      let occupied = false;
-      let isFree = Object.values(this.cells).some(i => i === null)
-      if (isFree) {
-        while (!occupied) {
-          let cell = getRandomCell();
-          let num = getRandomTileNumber();
-          let allFree = Object.values(this.cells).every(i => i === null)
-          if (!this.cells[cell]) {
-            this.cells[cell] = new Tile(num, cell);
-            occupied = allFree ? false : true;
+      setTimeout(() => {
+        let occupied = false;
+        let isFree = Object.values(this.cells).some(i => i === null)
+        if (isFree) {
+          while (!occupied) {
+            let cell = getRandomCell();
+            let num = getRandomTileNumber();
+            let allFree = Object.values(this.cells).every(i => i === null)
+            if (!this.cells[cell]) {
+              this.cells[cell] = new Tile(num, cell);
+              occupied = allFree ? false : true;
+            }
           }
         }
-      }
+      }, 50);
+     
     },
     move(dir) {
       this.arrange(dir);
@@ -318,7 +324,8 @@ export default {
             if (!prev) return cur;
             else {
               if (prev.num === cur.num) {
-                this.cells[prev.coor] = cur.merged({
+                this.score += prev.num
+                this.cells[prev.coor] = cur.merge({
                   cellXY: this.coords[prev.coor],
                   from: this.coords[cur.coor],
                   to: this.coords[prev.coor]
@@ -332,9 +339,7 @@ export default {
           });
         }
       });
-      setTimeout(() => {
-        this.spawn();
-      }, 50);
+      this.spawn()
     }
   },
   mounted() {
@@ -405,17 +410,31 @@ export default {
           break;
       }
     });
-    setTimeout(() => {
-      this.spawn();
-    }, 50)
-    
+    this.spawn();
   }
 };
 </script>
 
 <style lang="scss">
+.title {
+  font-size: 80px;
+  font-weight: bold;
+  margin-right: 220px;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  color: #776e65;
+}
+.score {
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: 220px;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  color: #776e65;
+}
 .board {
   width: 400px;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: minmax(100px, auto);

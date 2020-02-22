@@ -1,5 +1,5 @@
 <template>
-  <div v-if="occupied" :xy="xy" class="cell">
+  <div v-if="occupied && !fresh" :xy="xy" class="cell">
     <Tile
       :cellXY="xy"
       :position="position"
@@ -24,6 +24,7 @@
       />
     </div>
   </div>
+
   <div v-else class="cell"></div>
 </template>
 
@@ -34,6 +35,7 @@ export default {
   data() {
     return {
       old: null,
+      fresh: null
     }
   },
 
@@ -47,9 +49,13 @@ export default {
   },
   watch: {
     occupied: function(tile, old) {
-      if (tile === null && old !== null) {
+      if (!tile && old) {
         this.old = old
         setTimeout(() => this.old = null, 200)
+      } else if (tile && old) {
+        this.fresh = tile;
+        this.old = old
+        setTimeout(() => this.fresh = null, 200)
       }
     }
   }
