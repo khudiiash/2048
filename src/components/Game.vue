@@ -190,9 +190,9 @@ export default {
         12: null,
         13: null,
         14: null,
-        21: null,
-        22: null,
-        23: null,
+        21: new Tile(4, 21),
+        22: new Tile(4, 22),
+        23: new Tile(4, 23),
         24: null,
         31: null,
         32: null,
@@ -324,12 +324,13 @@ export default {
             if (!prev) return cur;
             else {
               if (prev.num === cur.num) {
-                this.score += prev.num
+                this.score += prev.num;
                 this.cells[prev.coor] = cur.merge({
                   cellXY: this.coords[prev.coor],
                   from: this.coords[cur.coor],
                   to: this.coords[prev.coor]
                 });
+                prev = this.cells[prev.coor];
                 this.cells[cur.coor] = null;
                 this.arrange(dir);
                 return tiles.length % 2 === 0 ? cur : prev;
@@ -339,7 +340,7 @@ export default {
           });
         }
       });
-      this.spawn()
+      // this.spawn()
     }
   },
   mounted() {
@@ -410,7 +411,7 @@ export default {
           break;
       }
     });
-    this.spawn();
+    // this.spawn();
   }
 };
 </script>

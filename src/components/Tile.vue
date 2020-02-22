@@ -25,31 +25,30 @@ export default {
     from: Object,
     to: Object,
     tile: Object,
-    transition: Boolean,
+    transition: Boolean
   },
   mounted() {
-    if (this.transition) {
+    if (this.transition || this.tile.merged) {
+
       this.$refs.thisTile.style.top = `${this.from.top}px`;
       this.$refs.thisTile.style.left = `${this.from.left}px`;
       setTimeout(() => {
-        this.$refs.thisTile.style.top = `${this.to.top}px`
-        this.$refs.thisTile.style.left = `${this.to.left}px`
+        this.$refs.thisTile.style.top = `${this.to.top}px`;
+        this.$refs.thisTile.style.left = `${this.to.left}px`;
+      }, 0);
+    } else if (this.from) {
+      console.log(this.num)
+      this.$refs.thisTile.style.top = `${this.from.top}px`;
+      this.$refs.thisTile.style.left = `${this.from.left}px`;
+      setTimeout(() => {
+        this.$refs.thisTile.style.top = `${this.to.top}px`;
+        this.$refs.thisTile.style.left = `${this.to.left}px`;
       }, 0);
     } else {
-      if (this.from) {
-        this.$refs.thisTile.style.top = `${this.from.top}px`;
-        this.$refs.thisTile.style.left = `${this.from.left}px`;
-        setTimeout(() => {
-          this.$refs.thisTile.style.top = `${this.to.top}px`
-          this.$refs.thisTile.style.left = `${this.to.left}px`
-        }, 0);
-      } else {
-        this.$refs.thisTile.style.transition =
+      this.$refs.thisTile.style.transition =
         "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
-        this.$refs.thisTile.style.opacity = 0;
-        setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
-      }
-     
+      this.$refs.thisTile.style.opacity = 0;
+      setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
     }
     if (this.tile.spawn) {
       this.$refs.thisTile.style.transition =
