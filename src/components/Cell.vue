@@ -47,6 +47,7 @@
 
 <script>
 import Tile from "./Tile";
+import gsap from 'gsap'
 export default {
   name: "Cell",
   data() {
@@ -67,12 +68,14 @@ export default {
   watch: {
     occupied: function(tile, old) {
       if (!tile && old) {
+        // Not merging
         this.old = old;
-        setTimeout(() => (this.old = null), 300);
+        gsap.delayedCall(0,() => (this.old = null) )
       } else if (tile && old) {
+        // Merging
         this.fresh = tile;
         this.old = old;
-        setTimeout(() => (this.fresh = null), 300);
+        gsap.delayedCall(0,() => (this.fresh = null))
       }
     }
   }

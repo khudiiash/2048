@@ -1,104 +1,29 @@
 <template>
   <div class="game" id="game">
-    <div>
+     <div class='score'>Score<div>{{score}}</div></div>
+     <div class='best'>Best<div>{{best || score}}</div></div>
+     <div class='replay' @click="restart">
+      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 76.398 76.398" xml:space="preserve">
+            <path d="M58.828,16.208l-3.686,4.735c7.944,6.182,11.908,16.191,10.345,26.123C63.121,62.112,48.954,72.432,33.908,70.06
+              C18.863,67.69,8.547,53.522,10.912,38.477c1.146-7.289,5.063-13.694,11.028-18.037c5.207-3.79,11.433-5.613,17.776-5.252
+              l-5.187,5.442l3.848,3.671l8.188-8.596l0.002,0.003l3.668-3.852L46.39,8.188l-0.002,0.001L37.795,0l-3.671,3.852l5.6,5.334
+              c-7.613-0.36-15.065,1.853-21.316,6.403c-7.26,5.286-12.027,13.083-13.423,21.956c-2.879,18.313,9.676,35.558,27.989,38.442
+              c1.763,0.277,3.514,0.411,5.245,0.411c16.254-0.001,30.591-11.85,33.195-28.4C73.317,35.911,68.494,23.73,58.828,16.208z"/>
+      </svg>
+     </div>
+     
+    <div class='header'>
       <h1 class="title">2048</h1>
     </div>
     <div class="board">
       <Cell
-        pos="11"
-        :xy="11"
-        :position="this.coords[11]"
-        :occupied="this.cells[11]"
-      />
-      <Cell
-        :xy="12"
-        pos="12"
-        :position="this.coords[12]"
-        :occupied="this.cells[12]"
-      />
-      <Cell
-        :xy="13"
-        pos="13"
-        :position="this.coords[13]"
-        :occupied="this.cells[13]"
-      />
-      <Cell
-        :xy="14"
-        pos="14"
-        :position="this.coords[14]"
-        :occupied="this.cells[14]"
-      />
-      <Cell
-        :xy="21"
-        pos="21"
-        :position="this.coords[21]"
-        :occupied="this.cells[21]"
-      />
-      <Cell
-        :xy="22"
-        pos="22"
-        :position="this.coords[22]"
-        :occupied="this.cells[22]"
-      />
-      <Cell
-        :xy="23"
-        pos="23"
-        :position="this.coords[23]"
-        :occupied="this.cells[23]"
-      />
-      <Cell
-        :xy="24"
-        pos="24"
-        :position="this.coords[24]"
-        :occupied="this.cells[24]"
-      />
-      <Cell
-        :xy="31"
-        pos="31"
-        :position="this.coords[31]"
-        :occupied="this.cells[31]"
-      />
-      <Cell
-        :xy="32"
-        pos="32"
-        :position="this.coords[32]"
-        :occupied="this.cells[32]"
-      />
-      <Cell
-        :xy="33"
-        pos="33"
-        :position="this.coords[33]"
-        :occupied="this.cells[33]"
-      />
-      <Cell
-        :xy="34"
-        pos="34"
-        :position="this.coords[34]"
-        :occupied="this.cells[34]"
-      />
-      <Cell
-        :xy="41"
-        pos="41"
-        :position="this.coords[41]"
-        :occupied="this.cells[41]"
-      />
-      <Cell
-        :xy="42"
-        pos="42"
-        :position="this.coords[42]"
-        :occupied="this.cells[42]"
-      />
-      <Cell
-        :xy="43"
-        pos="43"
-        :position="this.coords[43]"
-        :occupied="this.cells[43]"
-      />
-      <Cell
-        :xy="44"
-        pos="44"
-        :position="this.coords[44]"
-        :occupied="this.cells[44]"
+        v-for="n of board"
+        :key="n"
+        :pos="n"
+        :xy="n"
+        :position="coords[n]"
+        :occupied="cells[n]"
       />
     </div>
   </div>
@@ -106,12 +31,34 @@
 
 <script>
 import Cell from "./Cell";
+import gsap from 'gsap'
+console.log(gsap)
+function getDefaultData() {
+    const board = [11,12,13,14,
+                  21,22,23,24,
+                  31,32,33,34,
+                  41,42,43,44];
+    const coords = {}
+    const cells = {}
+    for (let n of board) {
+      coords[n] = null
+      cells[n] = null
+    }
+    return {
+      score: 0,
+      best: null,
+      board, 
+      coords, 
+      cells,
+      gameOver: true
+    };
+}
 
 const reversed = (a, b) => {
   // for reversing cols and rows
   // input [Tile, Tile, null, null]
   // output [null, null, Tile, Tile]
-  var va = a === null ? "" : "" + a,
+  const va = a === null ? "" : "" + a,
     vb = b === null ? "" : "" + b;
   return va > vb ? 1 : va === vb ? 0 : -1;
 };
@@ -164,47 +111,7 @@ export default {
     Cell
   },
   name: "Game",
-  data() {
-    return {
-      score: 0,
-      coords: {
-        11: null,
-        12: null,
-        13: null,
-        14: null,
-        21: null,
-        22: null,
-        23: null,
-        24: null,
-        31: null,
-        32: null,
-        33: null,
-        34: null,
-        41: null,
-        42: null,
-        43: null,
-        44: null
-      },
-      cells: {
-        11: null,
-        12: null,
-        13: null,
-        14: null,
-        21: null,
-        22: null,
-        23: null,
-        24: null,
-        31: null,
-        32: null,
-        33: null,
-        34: null,
-        41: null,
-        42: null,
-        43: null,
-        44: null
-      }
-    };
-  },
+  data: function() { return getDefaultData() },
   methods: {
     arrange(dir) {
       let col1 = [],
@@ -215,7 +122,6 @@ export default {
         row2 = [],
         row3 = [],
         row4 = [];
-
       for (let [key] of Object.entries(this.cells)) {
         switch (key.charAt(0)) {
           case "1":
@@ -284,6 +190,15 @@ export default {
         });
       }
     },
+    setCoords() {
+      let cells = this.$el.querySelectorAll(".cell");
+      for (let cell of cells) {
+        if (cell) {
+          let { left, top } = cell.getBoundingClientRect();
+          this.coords[cell.attributes.pos.value] = { left: left, top: top };
+        }
+      }
+    },
     spawn() {
       // spawn one random tile
       setTimeout(() => {
@@ -303,6 +218,7 @@ export default {
       }, 50);
     },
     move(dir) {
+      const stamp = {...this.cells}
       this.arrange(dir);
       ["1", "2", "3", "4"].forEach(i => {
         let tiles = ["up", "down"].includes(dir)
@@ -324,6 +240,16 @@ export default {
             else {
               if (prev.num === cur.num) {
                 this.score += prev.num;
+                if (this.best < this.score) this.best = this.score
+                // const staticTile = Array.from(document.querySelectorAll('.tile')).find(t => t.parentElement.getAttribute('xy') === String(prev.coor))
+                // if (staticTile) {
+                //   console.log({staticTile})
+                //   const clone = staticTile.cloneNode(true);
+                //   clone.classList.add('static')
+                //   document.querySelector('#app').appendChild(clone)
+                //   gsap.set(clone, {left: this.coords[prev.coor].left, top: this.coords[prev.coor].top})
+                //   gsap.to(clone, 0, {autoAlpha: 0, delay: .2, onComplete: () => clone.remove()})
+                // }
                 this.cells[prev.coor] = cur.merge({
                   cellXY: this.coords[prev.coor],
                   from: this.coords[cur.coor],
@@ -339,25 +265,46 @@ export default {
           });
         }
       });
-      this.spawn()
+      if (JSON.stringify(stamp) === JSON.stringify(this.cells)){
+        // no movement, checking if there are free cells
+        const isFree = Object.values(this.cells).some(i => i === null)
+        // if not, checking for game over
+        if (!isFree && this.isGameOver()) this.finish()
+      }
+      else this.spawn() // tiles were moved, so we spawn a new one
+    },
+    isGameOver() {
+        return !['1', '2', '3', '4'].some((n) => this.cells[n + 1].num / this.cells[n + 2].num === 1 ||
+                                                this.cells[n + 2].num / this.cells[n + 3].num === 1 ||
+                                                this.cells[n + 3].num / this.cells[n + 4].num === 1 ||
+                                                this.cells[1 + n].num / this.cells[2 + n].num === 1 ||
+                                                this.cells[2 + n].num / this.cells[3 + n].num === 1 ||
+                                                this.cells[3 + n].num / this.cells[4 + n].num === 1)
+    },
+    finish() {
+        console.log('game over')
+    },
+    restart: function() {
+      Object.assign(this._data, getDefaultData(), {best: this._data.score > this._data.best ? this._data.score : this._data.best})
+      this.setCoords()
+      setTimeout(this.spawn, 500)
     }
   },
+
   mounted() {
-    let cells = this.$el.querySelectorAll(".cell");
-    for (let cell of cells) {
-      if (cell) {
-        let { left, top } = cell.getBoundingClientRect();
-        this.coords[cell.attributes.pos.value] = { left: left, top: top };
-      }
-    }
+    this.setCoords()
+    let touchstartX = 0;
+    let touchstartY = 0;
+    let touchendX = 0;
+    let touchendY = 0;
 
-    var touchstartX = 0;
-    var touchstartY = 0;
-    var touchendX = 0;
-    var touchendY = 0;
 
-    var gesuredZone = document.body;
 
+    window.addEventListener('resize', () => {
+        this.setCoords()
+    })
+
+    const gesuredZone = document.body;
     gesuredZone.addEventListener(
       "touchstart",
       event => {
@@ -419,20 +366,32 @@ export default {
 .title {
   font-size: 80px;
   font-weight: bold;
-  margin-right: 220px;
-  margin-bottom: 0;
+  margin: 0;
   box-sizing: border-box;
   color: #776e65;
-  margin-top: -30%;
-  margin-bottom: 5%;
 }
-.score {
-  font-size: 30px;
+.header {
+  display: flex;
+  width: 400px;
+}
+.score, .best, .replay {
+  font-size: 22px;
+  width: 120px;
+  height: 60px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
   font-weight: bold;
   margin-right: 220px;
-  margin-bottom: 0;
+  margin: 0;
+  border-radius: 4px;
   box-sizing: border-box;
-  color: #776e65;
+  color: #fff;
+  background: #776e65;
+}
+.best {
+   left: 150px;
+   top: 10px;
 }
 .board {
   width: 400px;
@@ -443,5 +402,30 @@ export default {
   background: #bbada0;
   padding: 5px;
   border-radius: 5px;
+}
+.replay {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: 300px;
+  top: 10px;
+  background: #776e65;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.replay svg {
+  width: 60%;
+  height: 60%;
+}
+path {
+  fill: #bbada0;
+}
+
+.tile {
+  z-index: 1;
+}
+.tile.static {
+  z-index: 0;
 }
 </style>

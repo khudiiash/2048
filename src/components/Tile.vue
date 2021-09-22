@@ -15,14 +15,9 @@
 </template>
 
 <script>
+import gsap from 'gsap'
 export default {
   name: "Tile",
-  data() {
-    return {
-      transitionCSS:
-        "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out"
-    }
-  },
   props: {
     num: Number,
     coor: Number,
@@ -36,30 +31,30 @@ export default {
   },
   methods: {
     move() {
-      this.$refs.thisTile.style.transition = "none";
-      this.$refs.thisTile.style.top = `${this.from.top}px`;
-      this.$refs.thisTile.style.left = `${this.from.left}px`;
-      setTimeout(() => {
-        this.$refs.thisTile.style.transition = this.transitionCSS;
-        this.$refs.thisTile.style.top = `${this.to.top}px`;
-        this.$refs.thisTile.style.left = `${this.to.left}px`;
-      }, 0);
+      if (!this.$refs.thisTile||!this.to) return
+      const {thisTile} = this.$refs
+      const toTile = Array.from(document.querySelectorAll('.tile')).find(t => t.offsetLeft === Math.round(this.to.left) && t.offsetTop === Math.round(this.to.top))
+      const clone = thisTile.cloneNode(true);
+      gsap.set(toTile, {opacity: 0})
+      gsap.set(clone, {left: this.from.left, top: this.from.top})
+      document.querySelector('#app').appendChild(clone)
+    
+      gsap.to(clone, 0.2, {left: this.to.left, top: this.to.top,
+                  onComplete: () => {
+                    if (toTile) gsap.set(toTile, {opacity: 1})
+                    clone.remove()
+                  }})
     }
   },
   mounted() {
     if (this.transition || this.from || this.tile.merged) {
+      gsap.from(this.$refs.thisTile, 0, {opacity: 0, delay: .2})
       this.move();
     } else {
-        this.$refs.thisTile.style.transition =
-          "transform 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
-        this.$refs.thisTile.style.opacity = 0;
-        setTimeout(() => (this.$refs.thisTile.style.opacity = `1`), 200);
+        if (!this.$refs.thisTile) return
       }
     if (this.tile.spawn) {
-      this.$refs.thisTile.style.transition =
-        "transform 200ms, opacity 200ms, left 200ms ease-in-out, top 200ms ease-in-out";
-      this.$refs.thisTile.style.transform = "scale(0)";
-      setTimeout(() => (this.$refs.thisTile.style.transform = `scale(1)`), 200);
+       gsap.from(this.$refs.thisTile, .2, {scale: 0})
     }
   }
 };
@@ -80,8 +75,8 @@ export default {
   text-align: center;
   font-weight: bold;
   font-size: 55px;
-  -webkit-transition: left 200ms ease-in-out, top 200ms ease-in-out;
-  transition: left 200ms ease-in-out, top 200ms ease-in-out;
+  // -webkit-transition: left 200ms ease-in-out, top 200ms ease-in-out;
+  // transition: left 200ms ease-in-out, top 200ms ease-in-out;
   &[num="4"] {
     background: #ede0c8;
   }

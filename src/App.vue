@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Game />
+    <div class='instructions'>Use <b>arrow keys</b> to play the game</div>
   </div>
 </template>
 
@@ -36,5 +37,9 @@ body, html {
   background: url(https://images.pexels.com/photos/1242348/pexels-photo-1242348.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260)
     no-repeat;
   background-size: cover;
+}
+.instructions {
+  position: absolute;
+  bottom: 20px;
 }
 </style>
