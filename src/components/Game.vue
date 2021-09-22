@@ -282,7 +282,7 @@ export default {
                                                 this.cells[3 + n].num / this.cells[4 + n].num === 1)
     },
     finish() {
-        console.log('game over')
+        // console.log('game over')
     },
     restart: function() {
       Object.assign(this._data, getDefaultData(), {best: this._data.score > this._data.best ? this._data.score : this._data.best})
