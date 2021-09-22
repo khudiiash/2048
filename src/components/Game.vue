@@ -31,8 +31,7 @@
 
 <script>
 import Cell from "./Cell";
-import gsap from 'gsap'
-console.log(gsap)
+
 function getDefaultData() {
     const board = [11,12,13,14,
                   21,22,23,24,
